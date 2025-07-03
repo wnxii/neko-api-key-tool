@@ -11,6 +11,7 @@ import {
   Toast,
   Space,
   Tabs,
+  Progress,
 } from "@douyinfe/semi-ui";
 import { IconSearch, IconCopy, IconDownload } from "@douyinfe/semi-icons";
 import { API, timestamp2string, copy } from "../helpers";
@@ -99,7 +100,7 @@ const LogsTable = () => {
       [key]: {
         balance: 0,
         usage: 0,
-        accessdate: "Unknown",
+        accessdate: 0,
         logs: [],
         tokenValid: false,
       },
@@ -137,6 +138,8 @@ const LogsTable = () => {
         const subscriptionData = subscription.data;
         newTabData.balance = subscriptionData.hard_limit_usd;
         newTabData.tokenValid = true;
+        newTabData.accessdate = subscriptionData.access_until;
+        console.table(subscriptionData);
 
         let now = new Date();
         let start = new Date(now.getTime() - 100 * 24 * 3600 * 1000);
@@ -456,7 +459,7 @@ Valid Until: ${
     logs: [],
     balance: 0,
     usage: 0,
-    accessdate: "Unknown",
+    accessdate: 0,
     tokenValid: false,
   };
 
@@ -494,7 +497,7 @@ Valid Until: ${
         >
           {process.env.REACT_APP_SHOW_BALANCE === "true" && (
             <Panel
-              header="Token Information"
+              header="Key Information"
               itemKey="1"
               extra={
                 <Button
@@ -511,39 +514,39 @@ Valid Until: ${
               <Spin spinning={loading}>
                 <div style={{ marginBottom: 16 }}>
                   <Text type="secondary">
-                    Total Amount (USD)： $
+                    Total Amount (USD)：
                     {activeTabData.balance === 100000000
                       ? "Unlimited"
                       : activeTabData.balance === "Unknown" ||
                         activeTabData.balance === undefined
                       ? "Unknown"
-                      : `${activeTabData.balance.toFixed(3)}`}
+                      : `$${activeTabData.balance.toFixed(3)}`}
                   </Text>
                   <br />
                   <br />
                   <Text type="secondary">
-                    Remaining Quota (USD)： $
+                    Remaining Quota (USD)：
                     {activeTabData.balance === 100000000
-                      ? "Unlimited制"
+                      ? "Unlimited"
                       : activeTabData.balance === "Unknown" ||
                         activeTabData.usage === "Unknown" ||
                         activeTabData.balance === undefined ||
                         activeTabData.usage === undefined
                       ? "Unknown"
-                      : `${(
+                      : `$${(
                           activeTabData.balance - activeTabData.usage
                         ).toFixed(3)}`}
                   </Text>
                   <br />
                   <br />
                   <Text type="secondary">
-                    Used Quota (USD): $
+                    Used Quota (USD)：
                     {activeTabData.balance === 100000000
                       ? "Not calculated"
                       : activeTabData.usage === "Unknown" ||
                         activeTabData.usage === undefined
                       ? "Unknown"
-                      : `${activeTabData.usage.toFixed(3)}`}
+                      : `$${activeTabData.usage.toFixed(3)}`}
                   </Text>
                   <br />
                   <br />
@@ -556,6 +559,22 @@ Valid Until: ${
                       : renderTimestamp(activeTabData.accessdate)}
                   </Text>
                 </div>
+                {activeTabData.tokenValid &&
+                  activeTabData.balance !== 100000000 && (
+                    <div style={{ marginTop: 20 }}>
+                      <Progress
+                        percent={Number(
+                          (
+                            (activeTabData.balance -
+                              activeTabData.usage / activeTabData.balance) *
+                            100
+                          ).toFixed(3)
+                        )}
+                        showInfo={true}
+                        size="large"
+                      />
+                    </div>
+                  )}
               </Spin>
             </Panel>
           )}
