@@ -11,6 +11,12 @@ RUN npm install
 # Copy the rest of the application source code
 COPY . .
 
+# Define build-time arguments
+ARG REACT_APP_API_URL
+
+# Assign production env so it can load from host
+ENV NODE_ENV=production
+
 # Build the application
 RUN npm run build
 
