@@ -1,18 +1,34 @@
+# Stage 1: Build the React application
 FROM node:16 as builder
 
-WORKDIR /build
-COPY . /app
-#COPY ./VERSION .
 WORKDIR /app
+
+# Copy package files and install dependencies
+# This leverages Docker cache
+COPY package*.json ./
 RUN npm install
+
+# Copy the rest of the application source code
+COPY . .
+
+# Build the application
 RUN npm run build
 
 
+# Stage 2: Serve the application from a lean image
+FROM node:16-alpine
 
-FROM nginx:1.19.0-alpine
-# 将构建的React应用复制到Nginx的html目录
-COPY --from=builder /app/build /usr/share/nginx/html
-# 暴露端口80
-EXPOSE 80
-# 启动Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Install `serve` to serve static files
+RUN npm install -g serve
+
+WORKDIR /app
+
+# Copy the built application from the builder stage
+COPY --from=builder /app/build .
+
+# Expose port 3000
+EXPOSE 3000
+
+# Command to run the server
+# -s flag is important for single-page apps
+CMD ["serve", "-s", ".", "-l", "3000"]

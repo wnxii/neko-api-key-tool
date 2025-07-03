@@ -565,10 +565,10 @@ Valid Until: ${
                       <Progress
                         percent={Number(
                           (
-                            (activeTabData.balance -
-                              activeTabData.usage / activeTabData.balance) *
+                            ((activeTabData.balance - activeTabData.usage) /
+                              activeTabData.balance) *
                             100
-                          ).toFixed(3)
+                          ).toFixed(2)
                         )}
                         showInfo={true}
                         size="large"

@@ -19,12 +19,7 @@ const HeaderBar = () => {
       <Nav
         mode="horizontal"
         header={{
-          text: "Token Query",
-          logo: (
-            <div style={{ width: "100%", height: "100%" }}>
-              <IconTag size="large" />
-            </div>
-          ),
+          text: "Key Query",
         }}
         footer={
           <>
