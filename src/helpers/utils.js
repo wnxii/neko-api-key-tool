@@ -1,34 +1,34 @@
-import { toast } from 'react-toastify';
-import { toastConstants } from '../constants';
+import { toast } from "react-toastify";
+import { toastConstants } from "../constants";
 
 export function isAdmin() {
-  let user = localStorage.getItem('user');
+  let user = localStorage.getItem("user");
   if (!user) return false;
   user = JSON.parse(user);
   return user.role >= 10;
 }
 
 export function isRoot() {
-  let user = localStorage.getItem('user');
+  let user = localStorage.getItem("user");
   if (!user) return false;
   user = JSON.parse(user);
   return user.role >= 100;
 }
 
 export function getSystemName() {
-  let system_name = localStorage.getItem('system_name');
-  if (!system_name) return 'One API';
+  let system_name = localStorage.getItem("system_name");
+  if (!system_name) return "One API";
   return system_name;
 }
 
 export function getLogo() {
-  let logo = localStorage.getItem('logo');
-  if (!logo) return '/logo.png';
-  return logo
+  let logo = localStorage.getItem("logo");
+  if (!logo) return "/logo.png";
+  return logo;
 }
 
 export function getFooterHTML() {
-  return localStorage.getItem('footer_html');
+  return localStorage.getItem("footer_html");
 }
 
 export async function copy(text) {
@@ -53,45 +53,53 @@ let showInfoOptions = { autoClose: toastConstants.INFO_TIMEOUT };
 let showNoticeOptions = { autoClose: false };
 
 if (isMobile()) {
-  showErrorOptions.position = 'top-center';
+  showErrorOptions.position = "top-center";
   // showErrorOptions.transition = 'flip';
 
-  showSuccessOptions.position = 'top-center';
+  showSuccessOptions.position = "top-center";
   // showSuccessOptions.transition = 'flip';
 
-  showInfoOptions.position = 'top-center';
+  showInfoOptions.position = "top-center";
   // showInfoOptions.transition = 'flip';
 
-  showNoticeOptions.position = 'top-center';
+  showNoticeOptions.position = "top-center";
   // showNoticeOptions.transition = 'flip';
 }
 
 export function showError(error) {
   console.error(error);
   if (error.message) {
-    if (error.name === 'AxiosError') {
+    if (error.name === "AxiosError") {
       switch (error.response.status) {
         case 401:
-          // toast.error('错误：未登录或登录已过期，请重新登录！', showErrorOptions);
+          // toast.error('Error: Not logged in or login has expired, please log in again!', showErrorOptions);
           // window.location.href = '/login?expired=true';
           break;
         case 429:
-          toast.error('错误：请求次数过多，请稍后再试！', showErrorOptions);
+          toast.error(
+            "Error: Too many requests, please try again later!",
+            showErrorOptions
+          );
           break;
         case 500:
-          toast.error('错误：服务器内部错误，请联系管理员！', showErrorOptions);
+          toast.error(
+            "Error: Internal server error, please contact the administrator!",
+            showErrorOptions
+          );
           break;
         case 405:
-          toast.info('本站仅作演示之用，无服务端！');
+          toast.info(
+            "This site is for demonstration purposes only, no server side!"
+          );
           break;
         default:
-          toast.error('错误：' + error.message, showErrorOptions);
+          toast.error("Error:" + error.message, showErrorOptions);
       }
       return;
     }
-    toast.error('错误：' + error.message, showErrorOptions);
+    toast.error("Error:" + error.message, showErrorOptions);
   } else {
-    toast.error('错误：' + error, showErrorOptions);
+    toast.error("Error:" + error, showErrorOptions);
   }
 }
 
@@ -116,7 +124,7 @@ export function openPage(url) {
 }
 
 export function removeTrailingSlash(url) {
-  if (url.endsWith('/')) {
+  if (url.endsWith("/")) {
     return url.slice(0, -1);
   } else {
     return url;
@@ -132,39 +140,29 @@ export function timestamp2string(timestamp) {
   let minute = date.getMinutes().toString();
   let second = date.getSeconds().toString();
   if (month.length === 1) {
-    month = '0' + month;
+    month = "0" + month;
   }
   if (day.length === 1) {
-    day = '0' + day;
+    day = "0" + day;
   }
   if (hour.length === 1) {
-    hour = '0' + hour;
+    hour = "0" + hour;
   }
   if (minute.length === 1) {
-    minute = '0' + minute;
+    minute = "0" + minute;
   }
   if (second.length === 1) {
-    second = '0' + second;
+    second = "0" + second;
   }
   return (
-    year +
-    '-' +
-    month +
-    '-' +
-    day +
-    ' ' +
-    hour +
-    ':' +
-    minute +
-    ':' +
-    second
+    year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second
   );
 }
 
 export function downloadTextAsFile(text, filename) {
-  let blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  let blob = new Blob([text], { type: "text/plain;charset=utf-8" });
   let url = URL.createObjectURL(blob);
-  let a = document.createElement('a');
+  let a = document.createElement("a");
   a.href = url;
   a.download = filename;
   a.click();
