@@ -80,7 +80,20 @@ const LogsTable = () => {
   const [activeKeys, setActiveKeys] = useState([]);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [baseUrl, setBaseUrl] = useState("");
-  const baseUrls = JSON.parse(process.env.REACT_APP_BASE_URL); // Parse environment variables
+  const baseUrls = (() => {
+    const raw = process.env.REACT_APP_BASE_URL;
+    if (!raw) return {};
+    try {
+      let parsed = JSON.parse(raw);
+      if (typeof parsed === "string") {
+        parsed = JSON.parse(parsed);
+      }
+      return parsed;
+    } catch (e) {
+      console.error("Failed to parse REACT_APP_BASE_URL", raw);
+      return {};
+    }
+  })();
 
   useEffect(() => {
     // Set the first address as the baseUrl by default
