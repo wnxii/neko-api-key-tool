@@ -84,13 +84,9 @@ const LogsTable = () => {
     const raw = process.env.REACT_APP_BASE_URL;
     if (!raw) return {};
     try {
-      let parsed = JSON.parse(raw);
-      if (typeof parsed === "string") {
-        parsed = JSON.parse(parsed);
-      }
-      return parsed;
+      return JSON.parse(raw);
     } catch (e) {
-      console.error("Failed to parse REACT_APP_BASE_URL", raw);
+      console.error("Failed to parse REACT_APP_BASE_URL", raw, e);
       return {};
     }
   })();
